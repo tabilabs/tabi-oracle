@@ -2,9 +2,18 @@ import { ethers } from "hardhat";
 
 async function main() {
 
-    const ChainNodeAddress = "0x1955a15c0eB68441baAb3DcD651E3814c67D4871"
+    // Require explicit operator/node parameters: this script mutates the sender
+    // allowlist of a live Operator, so it must never rely on stale defaults.
+    const ChainNodeAddress = process.env.CHAIN_NODE_ADDRESS
 
-    const OperatorAddress = "0x590311669252DCF34bfbF3981747D13Cf09ec19A"
+    const OperatorAddress = process.env.OPERATOR_ADDRESS
+
+    if (!OperatorAddress || !ethers.isAddress(OperatorAddress)) {
+        throw new Error("Set OPERATOR_ADDRESS in the environment before updating authorized senders.")
+    }
+    if (!ChainNodeAddress || !ethers.isAddress(ChainNodeAddress)) {
+        throw new Error("Set CHAIN_NODE_ADDRESS in the environment before updating authorized senders.")
+    }
 
     const Operator = await ethers.getContractAt("Operator", OperatorAddress)
 

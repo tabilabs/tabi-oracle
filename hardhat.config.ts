@@ -1,6 +1,11 @@
 import { HardhatUserConfig } from "hardhat/config";
 import "@nomicfoundation/hardhat-toolbox";
 
+// The deployer key must be provided via the environment; a hardhat account entry
+// that is empty causes an immediate, clear failure instead of a missing signer
+// deep inside a script.
+const DEPLOYER_PRIVATE_KEY = process.env.DEPLOYER_PRIVATE_KEY ?? "";
+
 const COMPILER_SETTINGS = {
   optimizer: {
     enabled: true,
@@ -18,9 +23,9 @@ const config: HardhatUserConfig = {
       allowUnlimitedContractSize: true,
     },
     tabi: {
-      url: 'https://rpc.testnet.tabichain.com',
+      url: process.env.TABI_RPC_URL ?? 'https://rpc.testnet.tabichain.com',
       chainId: 9789,
-      accounts: ['PRIVATE_KEY'],
+      accounts: DEPLOYER_PRIVATE_KEY ? [DEPLOYER_PRIVATE_KEY] : [],
     }
   },
   solidity: {

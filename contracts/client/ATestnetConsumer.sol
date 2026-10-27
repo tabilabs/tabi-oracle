@@ -69,6 +69,9 @@ contract ATestnetConsumer is ChainlinkClient, ConfirmedOwner {
         if (tempEmptyStringTest.length == 0) {
             return 0x0;
         }
+        // Job IDs longer than one word are silently truncated by the assembly
+        // load below; fail loudly so a truncated commitment is never created.
+        require(tempEmptyStringTest.length <= 32, "job id must fit in bytes32");
 
         assembly {
         // solhint-disable-line no-inline-assembly

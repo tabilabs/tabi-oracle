@@ -7,8 +7,10 @@ async function main() {
 
   console.log("ATestnetConsumer:", ATestnetConsumer.target);
 
-  const Operator = "0x590311669252DCF34bfbF3981747D13Cf09ec19A"
-  const job = "5b507ee5e7af477ebf31d4efaa5ba85b"
+  // High-privilege parameters are configurable via environment so the script does
+  // not mutate the live Operator allowlist with silently hardcoded defaults.
+  const Operator = process.env.OPERATOR_ADDRESS ?? "0x590311669252DCF34bfbF3981747D13Cf09ec19A"
+  const job = process.env.CHAINLINK_JOB_ID ?? "5b507ee5e7af477ebf31d4efaa5ba85b"
 
   const result = await (await ATestnetConsumer.requestEthereumPrice(Operator, job)).wait()
 
